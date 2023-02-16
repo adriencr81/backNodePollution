@@ -1,25 +1,29 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-var mongoDbUrl = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017"; //by default
-//ou bien "mongodb://superuser:motdepasse@127.0.0.1:27017"
+dotenv.config();
+
+const { MONGODB_URL, MONGODB_PASSWORD } = process.env;
+const mongoKey = encodeURIComponent(MONGODB_PASSWORD);
 
 
-console.log("mongoDbUrl="+mongoDbUrl);
-mongoose.connect(mongoDbUrl, {useNewUrlParser: true, 
-	                              useUnifiedTopology: true , 
-                                user : "" , pass : "" ,
-                                /*user: "username_telque_superuser" , pass : "motdepasse",*/
-								  dbName : 'pollution'});
-var thisDb  = mongoose.connection;
+const mongoDbUrl = MONGODB_URL || `mongodb+srv://adriencr:${mongoKey}@cluster0.cvewvo0.mongodb.net/?retryWrites=true&w=majority`;
 
-thisDb.on('error' , function() { 
-      console.log("mongoDb connection error = " + " for dbUrl=" + mongoDbUrl )
-    });
+mongoose.connect(mongoDbUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  dbName: 'pollution',
+});
 
-thisDb.once('open', function() {
-      // we're connected!
-      console.log("Connected correctly to mongodb database" );
-    });
+const db = mongoose.connection;
 
-export default { thisDb } ;
+db.on('error', function() {
+  console.error('MongoDB connection error for dbUrl=' + mongoDbUrl);
+});
+
+db.once('open', function() {
+  console.log('Connected correctly to MongoDB database');
+});
+
+export default { db };
 

@@ -8,25 +8,25 @@ var ThisPersistentModel;
 
 function initMongooseWithSchemaAndModel () {
 
-    
+ 
    
     mongoose.Connection = thisDb;
       thisSchema = new mongoose.Schema({
         _id: { type : Object , alias : "id" } ,
         city: { type : String , alias : "ville" } ,
-        
+        wind: { type : Number , alias : "vent" } ,
         
       });
      
-     
+    
 
       thisSchema.set('id',false); 
       thisSchema.set('toJSON', { virtuals: true , 
                                    versionKey:false,
                                    transform: function (doc, ret) {   delete ret._id;  }
                                  });                             
-    
-      ThisPersistentModel = mongoose.model("pollution", thisSchema, "pollution");
+     
+      ThisPersistentModel = mongoose.model("meteo", thisSchema, "meteo");
 }
 
 initMongooseWithSchemaAndModel();

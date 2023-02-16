@@ -23,6 +23,7 @@ apiRouter.route('/pollutionapi/all')
     try{
 		var mypollution = pollutionDaoMongoose.ThisPersistentModel;
         let pollution = await mypollution.find({});
+		console.log("pollution")
         res.send(pollution);
     } catch(ex) {
         res.status(statusCodeFromEx(ex)).send(ex);
